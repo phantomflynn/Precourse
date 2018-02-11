@@ -8,7 +8,7 @@ let newString = 'jeffrey' ;
 let newNum = 2018 ;
 
 //create a boolean variable
-let newBool = true ;
+let newBool = true;
 
 //solve the following math problem
 let newSubtract = 10 - 5 === 5;
