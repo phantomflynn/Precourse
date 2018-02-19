@@ -2,7 +2,7 @@
   STEP 0: Create an empty array called 'toDoItems'.
 */
 
-// code here
+var toDoItems = [];
 
 /* 
   STEP 1: There is a span element currently on the page with the innerHTML of 'This app was created by:',
@@ -10,16 +10,18 @@
           add your name to the END of the current innerHTML.
 */
 
-// code here
+document.querySelector('#createdBy').innerHTML += ' Jeffrey Flynn';
 
 /* 
-  STEP 2: Create a class called 'ToDo'.  The constructor should have one string parameter called description, the description of the toDo.
+  STEP 2: Create a class called 'ToDo'.  
+          The constructor should have one string parameter called description, the description of the toDo.
           Add two properties to the class: 'description' which should be set equal to the description passed to the constructor, and 
           'complete' which should be set to false. Hint: use the 'this' keyword in the constructor function.
 */
 
-function ToDo () {
-  // code here
+function ToDo (description) {
+  this.description = description;
+  this.complete = false;
 }
 
 /* 
@@ -28,7 +30,7 @@ function ToDo () {
           Inside the function set the ToDo's 'complete' property to true.
 */
 
-// code here
+ToDo.prototype.completeToDo = function() {this.complete = true;};
 
 /*
   STEP 4: This function, buildToDo, will have two parameters.  The first is an object of class ToDo and 
@@ -47,24 +49,50 @@ function ToDo () {
 */
 
 function buildToDo(todo, index) {
-  // code here
+
+  var toDoShell = document.createElement('div');
+  toDoShell.className = 'toDoShell';
+
+  var toDoText  = document.createElement('span');
+  toDoText.id = index;
+  toDoText.innerHTML = todo.description;
+
+  //document.querySelector('#addButton').addEventListener('click', displayToDos());
+
+  if (todo.complete === true) {
+    toDoText.className = 'completeText';
+  }
+
+  toDoShell.appendChild(toDoText);
+
+  return toDoShell;
+
 }
 
 /* 
-  STEP 5: This function will build and return an array of toDo elements. It will take an array of objects of the ToDo class as it's only argument.
+  STEP 5: This function will build and return an array of toDo elements. 
+          It will take an array of objects of the ToDo class as it's only argument.
           Using the map method on the array passed in, use the 'buildToDo' function you wrote above as the callback passed to map. 
           Return the new mapped array.
 */
 
 function buildToDos(toDos) {
-  // code here
+  
+  var index = 0;
+
+  return toDos.map(function(element) {
+    return buildToDo(element, index);
+    index++;
+  });
+
 }
 
 /* 
   STEP 6: Now that we can build an array of toDo elements, we want to make these elements appear on the screen, 
           to do this we will create a 'displayToDos' function.
           1.) Select the element with the id 'toDoContainer'.  Save this to a variable: 'toDoContainer'.
-          2.) Set the innerHTML of 'toDoContainer' to an empty string. (This will let us refresh the elements, and display the new toDos)
+          2.) Set the innerHTML of 'toDoContainer' to an empty string. 
+              (This will let us refresh the elements, and display the new toDos)
           3.) Using the buildToDos function pass it the array toDoItems as it's only argument.
           4.) Using the result of (3), loop over the array appending each element to 'toDoContainer'.
           5.) at the very end of this file, the line before the comment "DO NOT CHANGE ANY CODE BELOW THIS LINE", call this function.
@@ -73,13 +101,20 @@ function buildToDos(toDos) {
 */
 
 function displayToDos() {
-  // code here
+  
+  var toDoContainer = document.querySelector('#toDoContainer');
+  toDoContainer.innerHTML = '';
+
+  buildToDos(toDoItems).forEach(function(element) {
+    toDoContainer.appendChild(element);
+  });
+
 }
 
 /* 
   STEP 7: This function, 'addToDo' will add a new ToDo to the 'toDoItems' array.
           NOTE: We have not learned about input HTML elements yet, so we will give you a little more code to go on here.
-          'newToDo' is an text input element. All text input elements have a property called 'value', this value will be whatever is typed into 
+          'newToDo' is a text input element. All text input elements have a property called 'value', this value will be whatever is typed into 
           the text box on the page.
 
           1.) Using the value property on 'newToDo', create an new ToDo object using the ToDo class and pass the value as the description.
@@ -89,7 +124,13 @@ function displayToDos() {
 */
 
 function addToDo() {
-  // code here
+  
+  var newToDo = document.querySelector('#toDoInput');
+  var update = new ToDo(newToDo.value);
+  toDoItems.push(update);
+  newToDo = '';
+  displayToDos();
+
 }
 
 /* 
@@ -98,7 +139,7 @@ function addToDo() {
           2.) Add a 'click' event listener to this element, passing it the addToDo function as a callback
 */
 
-// cod here
+document.querySelector('#addButton').addEventListener('click', addToDo());
 
 /* 
   STEP 9: Finally in this step we will define the function to run when we want to compelte a toDo, and add that function to the click event
@@ -114,9 +155,11 @@ function addToDo() {
 */
 
 function completeToDo(event) {
-  // UNCOMMENT THE NEXT LINE
-  // const index = event.target.id;
-  // code here
+  
+  const index = event.target.id;
+  toDoItems[index].completeToDo();
+  displayToDos();
+  
 }
 
 /* STEP 10: Make sure ALL tests pass */
@@ -135,7 +178,7 @@ function completeToDo(event) {
 // ********************************************** ----------- ********************************************** //
 
 
-// Call displayToDos here (Step 6)<-----
+displayToDos();
 
 
 // ---------------------------- DO NOT CHANGE ANY CODE BELOW THIS LINE ----------------------------- //
